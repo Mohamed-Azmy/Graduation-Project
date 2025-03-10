@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongoose": "^8.12.1"
+  },
+  "name": "graduation-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type":"module",
+  "devDependencies": {},
+  "scripts": {
+    "start": " nodemon --env-file=.env index.js"
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohamed-Azmy/Graduation-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mohamed-Azmy/Graduation-Project/issues"
+  },
+  "homepage": "https://github.com/Mohamed-Azmy/Graduation-Project#readme"
+}
