@@ -21,66 +21,50 @@ export const addFile =asyncHandler( async(req,res,next)=>{
             {
                 resource_type: "video",
                 folder: "E-Learning/videos",
-                chunk_size: 6000000, // 6MB لكل جزء
+                chunk_size: 6000000,
                 user_filename: true,
                 unique_filename: false
             },
             (error, result) => {
-                if (error) return res.status(500).send(error);
-
-                fs.unlink(req.file.path, (err) => {
+                if (error) {
+                    if (!responseSent) {
+                        responseSent = true;
+                        console.error("Upload error:", error);
+                        return res.status(500).json({ error: "Upload failed" }); // ✅ استجابة واحدة فقط
+                    }
+                    return;
+                }
+    
+                // حذف الملف بعد الرفع
+                fs.unlink(filePath, (err) => {
                     if (err) console.error("Error deleting file:", err);
                 });
-        
-                return res.json(result);
+    
+                console.log("Upload finished successfully!");
+    
+                if (!responseSent) {
+                    responseSent = true;
+                    return res.json(result); // ✅ استجابة واحدة فقط
+                }
             }
         );
-        
+    
         // قراءة الملف وضبط progress
         const fileStream = fs.createReadStream(req.file.path);
         fileStream.pipe(upload_stream);
-        
+    
         fileStream.on("data", (chunk) => {
             uploadedSize += chunk.length;
             const progress = ((uploadedSize / totalSize) * 100).toFixed(2);
             console.log(`Upload Progress: ${progress}%`);
         });
-        upload_stream.once("finish",()=>{
-            console.log("file Uploaded successfully")
-        })
-    }
-    // else{
-    //     upload_stream = cloudinary.uploader.upload_stream(
-    //         { 
-    //           resource_type: 'auto',
-    //           folder: "E-Learning/pdfs",
-    //           user_filename: true,
-    //           unique_filename: false
-    //         },
-    //         (error, result) => {
-    //           fs.unlinkSync(req.file.path);
-      
-    //           if (error) return res.status(500).send(error);
-    //           return res.json(result);
-    //         }
-    //       );
-    //       const fileStream = fs.createReadStream(req.file.path).pipe(upload_stream);
-    //       fileStream.on("data", (chunk) => {
-    //         console.log(`Received ${chunk.length} bytes`);
-    //       });
-    // }
-
-    console.log(upload_stream);
     
-    // const data =new contentModel({
-    //     file:{
-    //         secure_url,
-    //         public_id
-    //     },
-    //     fileType
-    // })
-
-    // const saved= await addFiles({data})
-
-    return res.status(200).json({msg:"success"})
+        upload_stream.once("finish", () => {
+            console.log("File uploaded successfully to Cloudinary!");
+        });
+    }
 })
+
+
+
+// لسه مخلصش
