@@ -1,17 +1,16 @@
 {
   "dependencies": {
     "express": "^4.21.2",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9"
   },
   "name": "graduation-project",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type":"module",
-  "devDependencies": {},
+  "type": "module",
   "scripts": {
     "start": " nodemon --env-file=.env index.js"
-    
   },
   "repository": {
     "type": "git",
