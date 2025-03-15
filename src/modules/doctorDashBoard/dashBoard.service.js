@@ -1,70 +1,88 @@
-import { contentModel } from "../../DB/models/content.model.js"
 import cloudinary from "../../utils/cloudinary/index.js"
 import { asyncHandler } from "../../utils/globalErrorHandling/index.js"
 import { addFiles } from "./DBquery.js"
 import fs from "fs";
+import { fileTypes } from "../../middlewares/multer.js";
+import { fileType } from "../../DB/models/content.model.js";
+import { io } from "../../../index.js";
 
-export const addFile =asyncHandler( async(req,res,next)=>{
-    const{fileType}=req.body;
+export const addFile = asyncHandler(async (req, res, next) => {
+
+    const { fileName, courseTitle } = req.body;
 
     // if(!req.user){
     //     return next (new Error("user not authorized",{cause:400}))
     // }
+
     if(!req.file){
         return next(new Error("you nust choose file",{cause:400}))
     }
-    let upload_stream;
-    let uploadedSize=0;
-    const totalSize = fs.statSync(req.file.path).size;
-    if(req.file.mimetype==="video/mp4"){
-        upload_stream = cloudinary.uploader.upload_stream(
+
+    let uploadedSize = 0;
+    const filePath = req.file.path;
+    const totalSize = fs.statSync(filePath).size;
+
+    if (fileTypes.video.includes(req.file.mimetype)) {
+        let upload_stream = cloudinary.uploader.upload_stream(
             {
                 resource_type: "video",
-                folder: "E-Learning/videos",
-                chunk_size: 6000000,
-                user_filename: true,
+                folder: `E-Learning/videos/${courseTitle}`,
+                public_id: fileName,
+                chunk_size: 20000000,
                 unique_filename: false
             },
-            (error, result) => {
+            async(error, result) => {
                 if (error) {
-                    if (!responseSent) {
-                        responseSent = true;
-                        console.error("Upload error:", error);
-                        return res.status(500).json({ error: "Upload failed" }); // ✅ استجابة واحدة فقط
-                    }
-                    return;
+                    console.error("Upload error:", error);
+                    return res.status(500).json({ error: "Upload failed" });
                 }
-    
-                // حذف الملف بعد الرفع
+
                 fs.unlink(filePath, (err) => {
                     if (err) console.error("Error deleting file:", err);
                 });
-    
-                console.log("Upload finished successfully!");
-    
-                if (!responseSent) {
-                    responseSent = true;
-                    return res.json(result); // ✅ استجابة واحدة فقط
+
+                let { secure_url, public_id } = result;
+
+                const addFile = await addFiles({data:{
+                    courseTitle,
+                    file: {
+                        secure_url,
+                        public_id
+                    },
+                    fileType:fileType.video
                 }
+                })
+
+                return res.status(200).json({message:"success"});
             }
         );
-    
-        // قراءة الملف وضبط progress
-        const fileStream = fs.createReadStream(req.file.path);
+
+        const fileStream = fs.createReadStream(filePath);
         fileStream.pipe(upload_stream);
-    
+
         fileStream.on("data", (chunk) => {
             uploadedSize += chunk.length;
             const progress = ((uploadedSize / totalSize) * 100).toFixed(2);
-            console.log(`Upload Progress: ${progress}%`);
+            io.emit("progress", progress);
         });
-    
-        upload_stream.once("finish", () => {
-            console.log("File uploaded successfully to Cloudinary!");
+    }else if (fileTypes.pdf.includes(req.file.mimetype)) {
+        let{secure_url,public_id} = cloudinary.uploader.upload(req.file.path, {
+            folder: `E-Learning/pdfs/${courseTitle}`,
+            public_id: fileName,
+            unique_filename: false
+        })
+
+        const addFile = await addFiles({
+            data: {
+                courseTitle,
+                file: {
+                    secure_url,
+                    public_id
+                },
+                fileType:fileType.pdf
+            }
         });
-    }
+        return res.status(200).json({ message: "success" });
+    } else
+        return next(new Error("invalid file type",{cause:400}))
 })
-
-
-
-// لسه مخلصش
