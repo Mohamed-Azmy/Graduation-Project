@@ -1,28 +1,39 @@
 import mongoose from "mongoose"; 
 
+export const enumRole={
+admin:"admin",
+student:"student",
+doctor:"doctor"
+
+}
+
  export const userSchema= new mongoose.Schema({
    firstName:{
     type:string,
     minlength: [2, "Name must be at least 2 characters"],
     maxlength: [20, "Name must be less than 20 characters"]
+    
    },
    lastName:{
     type:string,
     minlength: [2, "Name must be at least 2 characters"],
-    maxlength: [20, "Name must be less than 20 characters"]
+    maxlength: [20, "Name must be less than 20 characters"],
+    
   
    },
    email:{
     type:string,
     match:[  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        "invalid email"]
+        "invalid email"],
+    unique:true    
    },
    password:{
-    type:string,
-    match:[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/,"weak password"]
+    type:string
    },
    role:{
-    enum:[student]
+    type:string,
+    enum:Object.values(enumRole),
+    required:true
 
    }
  })
