@@ -21,7 +21,6 @@ export const addFile = asyncHandler(async (req, res, next) => {
     let uploadedSize = 0;
     const filePath = req.file.path;
     const totalSize = fs.statSync(filePath).size;
-
     if (fileTypes.video.includes(req.file.mimetype)) {
         let upload_stream = cloudinary.uploader.upload_stream(
             {
@@ -65,13 +64,12 @@ export const addFile = asyncHandler(async (req, res, next) => {
             const progress = ((uploadedSize / totalSize) * 100).toFixed(2);
             io.emit("progress", progress);
         });
-    }else if (fileTypes.pdf.includes(req.file.mimetype)) {
-        let{secure_url,public_id} = cloudinary.uploader.upload(req.file.path, {
+    } else if (fileTypes.pdf.includes(req.file.mimetype)) {
+        let{secure_url,public_id} = await cloudinary.uploader.upload(req.file.path, {
             folder: `E-Learning/pdfs/${courseTitle}`,
             public_id: fileName,
             unique_filename: false
         })
-
         const addFile = await addFiles({
             data: {
                 courseTitle,
