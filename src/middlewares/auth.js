@@ -12,8 +12,27 @@ export const accessRoles ={
 export const authentication  = asyncHandler(async(req,res,next)=>{
     const {authorization} = req.headers ;
     if(!authorization){
-        return next (new Error("token not found",{cause:404}))}
-    const decoded =  await verifyToken({key:authorization,SIGNATURE : process.env.SIGNATURE_TOKEN})
+        return next (new Error("invalid token",{cause:404}))}
+
+        const {prefix,token} = authorization.split(" ") ;
+        if (!prefix || !token ){
+            return next (new Error("token or prefix not found",{cause:404}))
+        }
+        const SIGNATURE = undefined;
+        if(prefix == "admin"){
+            SIGNATURE = process.env.SIGNATURE_TOKEN_ADMIN
+        }
+        else if (prefix == "student"){
+            SIGNATURE = process.env.SIGNATURE_TOKEN_STUDENT
+        }
+        else if (prefix == "doctor"){
+            SIGNATURE = process.env.SIGNATURE_TOKEN_DOCTOR
+        }
+        else{
+            return next (new Error("unkown prefix",{cause:404}))
+        }
+
+    const decoded =  await verifyToken({key:token,SIGNATURE : SIGNATURE})
     if (!decoded?.id){
         return next (new Error("invalid token",{cause:400}))
     }

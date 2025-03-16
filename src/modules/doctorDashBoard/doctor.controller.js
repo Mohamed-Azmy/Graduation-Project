@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {multerCloudinary , fileTypes} from "../../middlewares/multer.js";
-import { addFile } from "./dashBoard.service.js";
-import { doctorDashBoardValidation } from "./dashBoard.validation.js";
+import { addFile } from "./doctor.service.js";
+import { doctorDashBoardValidation } from "./doctor.validation.js";
 import { validation } from "../../middlewares/validation.js";
 
 const doctorDashBoard= Router()

@@ -1,6 +1,4 @@
 
-
-
 export const validation = (schema) => (req, res, next) => {
     let errArr = [];
 

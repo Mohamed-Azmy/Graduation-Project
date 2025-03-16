@@ -10,9 +10,9 @@ export const addFile = asyncHandler(async (req, res, next) => {
 
     const { fileName, courseTitle } = req.body;
 
-    // if(!req.user){
-    //     return next (new Error("user not authorized",{cause:400}))
-    // }
+    if(!req.user){
+        return next (new Error("user not authorized",{cause:400}))
+    }
 
     if(!req.file){
         return next(new Error("you nust choose file",{cause:400}))

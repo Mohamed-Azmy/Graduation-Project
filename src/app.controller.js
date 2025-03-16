@@ -1,5 +1,7 @@
 import connectionDB from "./DB/connectionDB.js" 
-import doctorDashBoard from "./modules/doctorDashBoard/dashBoard.controller.js"
+import doctorDashBoard from "./modules/doctorDashBoard/doctor.controller.js"
+import userDashBoard from "./modules/userDashBoard/user.controller.js"
+import adminDashBoard from "./modules/adminDashBoard/admin.controller.js"
 import { globalErrorHandling } from "./utils/globalErrorHandling/index.js"
 import cors from "cors";
 
@@ -11,6 +13,9 @@ const bootStrap=async(app,express)=>{
     app.use(cors());
 
     app.use("/doctor",doctorDashBoard)
+    app.use("/admin",adminDashBoard)
+    app.use("/users",userDashBoard)
+
 
 
     connectionDB()
