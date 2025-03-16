@@ -1,7 +1,7 @@
 import Router from "express";
 import { validation } from "../../middlewares/validation.js";
 import * as SU from "./user.service.js";
-import * as SV from "./auth.Schema.js";
+import * as SV from "./user.validation.js";
 const userDashBoard = Router();
 
 
@@ -23,4 +23,4 @@ userDashBoard.post("/login" , validation(SV.loginSchema), SU.login)
 
 
 
-export default  studentRouter;
+export default  userDashBoard;
