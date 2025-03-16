@@ -1,52 +1,55 @@
-import { userModel } from "../../DB/models/users.model.js";
-import { asyncHandler } from "../../utils/globalErrorHandling/index.js";
-import { hashPassword } from "../../utils/hashing/hash.js";
-import {  comparing } from "../../utils/hashing/compare.js";
-import { signToken } from "../../utils/token/sign.js";
+import mongoose from "mongoose";
+import { enumRole } from "../../DB/models/users.model.js";
+import { asyncHandler, hashPassword, comparing, signToken } from "../../utils/index.js";
+import { findByEmail, addStudent } from "./DBquery.js";
 
 
 
 
 export const signUp = asyncHandler(async(req,res,next)=>{
     const {firstName ,lastName ,email ,password} = req.body ;
- 
-    const user = await userModel.findOne({email}) ;
 
-    if(!user){
-        return next (new Error("student already exist ", {cause:404}))
+    const user = await findByEmail({ email });
 
-    }
-    const passwordHash = await hashPassword({key:password,SALT_ROUNDS:process.env.SALT_ROUNDS})
+    if (user)
+        return next(new Error("student already exist ", { cause: 404 }));
 
-const newStudent = await userModel.create({
-    firstName:firstName,
-    lastName:lastName,
-    email:email,
-    password:passwordHash,
-    role:"student"
-})
-return res.status(200).json ({message:"success",user:newStudent})
-})
+    const passwordHash = await hashPassword({ key: password, SALT_ROUNDS: process.env.SALT_ROUNDS })
 
+    const id = new mongoose.Types.ObjectId();
 
-export const login = asyncHandler(async(req,res,next)=>{
-    const {email ,password} = req.body ;
-    const user = await userModel.findOne({email})
-    if(!user){
-        return next (new Error("user not found", {cause:404}))
+    const newStudent = {
+        _id:id,
+        firstName:firstName,
+        lastName:lastName,
+        email:email,
+        password:passwordHash,
+        role: enumRole.student
     }
 
-    const userPassword = user.password ;
-    const passwordMatch = await comparing({Key:password,hashed:userPassword})
+    await addStudent({ data: newStudent });
+
+    return res.status(200).json({ message: "success" });
+})
+
+
+export const login = asyncHandler(async (req, res, next) => {
+
+    const { email, password } = req.body;
+
+    const user = await findByEmail({ email });
+
+    if (!user)
+        return next(new Error("user not found", { cause: 404 }));
+
+    const passwordMatch = await comparing({ Key: password, hashed: user.password });
     
-    if(!passwordMatch){
-        return next (new Error("password not match",{cause:400}))
+    if (!passwordMatch)
+        return next(new Error("wrong password", { cause: 400 }));
 
-    }
+    const token = await signToken({ payload: { email, id: user._id }, SIGNATURE: process.env.SIGNRTURE_TOKEN });
 
-    const token = await signToken({payload:{email,name:user.firstName+ " " +user.lastName ,id:user._id},
-        SIGNATURE:process.env.SIGNRTURE_TOKEN})
-        return res.status(200).json({message:"success",token})
+    return res.status(200).json({ message: "success", token });
 })
 
 

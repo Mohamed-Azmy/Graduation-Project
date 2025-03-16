@@ -1,8 +1,8 @@
 import { Router } from "express";
-import {multerCloudinary , fileTypes} from "../../middlewares/multer.js";
+import {multerCloudinary , fileTypes, validation, authentication, authorization} from "../../middlewares/index.js";
 import { addFile } from "./doctor.service.js";
 import { doctorDashBoardValidation } from "./doctor.validation.js";
-import { validation } from "../../middlewares/validation.js";
+import { enumRole } from "../../DB/models/users.model.js";
 
 const doctorDashBoard= Router()
 
@@ -10,7 +10,7 @@ const doctorDashBoard= Router()
 
 
 
-doctorDashBoard.post("/",multerCloudinary([...fileTypes.pdf,...fileTypes.video]).single("attachment"), validation(doctorDashBoardValidation),addFile);
+doctorDashBoard.post("/",multerCloudinary([...fileTypes.pdf,...fileTypes.video]).single("attachment"), authentication,authorization([enumRole.doctor]),validation(doctorDashBoardValidation),addFile);
 
 
 

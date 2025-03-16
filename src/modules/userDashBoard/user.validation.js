@@ -9,18 +9,14 @@ export const signUpSchema = {
         firstName:joi.string().min(2).max(20).message({
             "string.min": "name is short",
             "string.max": "name is long"
-            }),
-            lastName:joi.string().min(2).max(20).message({
+        }).required(),
+        lastName:joi.string().min(2).max(20).message({
             "string.min": "name is short",
             "string.max": "name is long"
-            }),
-            email : generalRules.email.required(),
-            password : generalRules.password.required() ,
-            role:joi.string().valid("student").required() ,
-
-        }).required() 
-
-
+        }).required(),
+        email : generalRules.email.required(),
+        password : generalRules.password.required() ,
+    }).required() 
 };
 
 
