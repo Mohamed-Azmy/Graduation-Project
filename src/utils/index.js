@@ -1,6 +1,6 @@
 export * from "./hashing/index.js"
 export * from "./encryption/index.js"
 export * from "./tokens/index.js"
-export * from "./GeneralRules/index.js"
+export * from "./generalRules/index.js"
 export * from "./globalErrorHandling/index.js"
 export * from "./cloudinary/index.js"

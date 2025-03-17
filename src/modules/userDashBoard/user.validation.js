@@ -1,5 +1,5 @@
 import joi from "joi";
-import { generalRules } from "../../utils/GeneralRules/index.js";
+import { generalRules } from "../../utils/index.js";
 
 
 
