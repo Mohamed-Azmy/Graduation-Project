@@ -10,12 +10,12 @@ export const addFile = asyncHandler(async (req, res, next) => {
 
     const { fileName, courseTitle } = req.body;
 
-    if(!req.user){
-        return next (new Error("user not authorized",{cause:400}))
+    if (!req.user) {
+        return next(new Error("user not authorized", { cause: 400 }))
     }
 
-    if(!req.file){
-        return next(new Error("you nust choose file",{cause:400}))
+    if (!req.file) {
+        return next(new Error("you nust choose file", { cause: 400 }))
     }
 
     let uploadedSize = 0;
@@ -30,7 +30,7 @@ export const addFile = asyncHandler(async (req, res, next) => {
                 chunk_size: 20000000,
                 unique_filename: false
             },
-            async(error, result) => {
+            async (error, result) => {
                 if (error) {
                     console.error("Upload error:", error);
                     return res.status(500).json({ error: "Upload failed" });
@@ -42,17 +42,18 @@ export const addFile = asyncHandler(async (req, res, next) => {
 
                 let { secure_url, public_id } = result;
 
-                const addFile = await addFiles({data:{
-                    courseTitle,
-                    file: {
-                        secure_url,
-                        public_id
-                    },
-                    fileType:fileType.video
-                }
+                const addFile = await addFiles({
+                    data: {
+                        courseTitle,
+                        file: {
+                            secure_url,
+                            public_id
+                        },
+                        fileType: fileType.video
+                    }
                 })
 
-                return res.status(200).json({message:"success"});
+                return res.status(200).json({ message: "success" });
             }
         );
 
@@ -65,7 +66,7 @@ export const addFile = asyncHandler(async (req, res, next) => {
             io.emit("progress", progress);
         });
     } else if (fileTypes.pdf.includes(req.file.mimetype)) {
-        let{secure_url,public_id} = await cloudinary.uploader.upload(req.file.path, {
+        let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
             folder: `E-Learning/pdfs/${courseTitle}`,
             public_id: fileName,
             unique_filename: false
@@ -77,31 +78,31 @@ export const addFile = asyncHandler(async (req, res, next) => {
                     secure_url,
                     public_id
                 },
-                fileType:fileType.pdf
+                fileType: fileType.pdf
             }
         });
         return res.status(200).json({ message: "success" });
     } else
-        return next(new Error("invalid file type",{cause:400}))
-})
+        return next(new Error("invalid file type", { cause: 400 }))
+});
 
 
 export const deleteFile = asyncHandler(async (req, res, next) => {
 
     const { fileId } = req.paramsك
 
-    if(!req.user)
-        return next (new Error("user not authorized",{cause:400}))
+    if (!req.user)
+        return next(new Error("user not authorized", { cause: 400 }))
     
-    const file= await contentModel.findById({fileId})
+    const file = await contentModel.findById({ fileId })
 
-    if(!file)
+    if (!file)
         return next(new Error("files not found or deleted", { cause: 400 }))
 
-    await cloudinary.uploader.destroy(file.public_id) 
+    await cloudinary.uploader.destroy(file.public_id)
 
-    const deletedFile= await contentModel.findByIdAndDelete({fileId})
+    const deletedFile = await contentModel.findByIdAndDelete({ fileId })
 
-    return res.status(200).json({ message: "success",deletedFile });
+    return res.status(200).json({ message: "success", deletedFile });
 
-})
+});
