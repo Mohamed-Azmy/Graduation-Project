@@ -4,7 +4,7 @@ import { addFiles } from "./DBquery.js"
 import fs from "fs";
 import { fileTypes } from "../../middlewares/multer.js";
 import { fileType } from "../../DB/models/content.model.js";
-import io from "../../../index.js";
+import {io} from "../../../index.js";
 
 export const addFile = asyncHandler(async (req, res, next) => {
 
@@ -86,19 +86,19 @@ export const addFile = asyncHandler(async (req, res, next) => {
 
 export const deleteFile = asyncHandler(async (req, res, next) => {
 
-    const { fileId } = req.paramsك
+    const { fileId } = req.params
 
     if (!req.user)
         return next(new Error("user not authorized", { cause: 400 }))
     
-    const file = await contentModel.findById({ fileId })
+    const file = await contentModel.findById(fileId)
 
     if (!file)
         return next(new Error("files not found or deleted", { cause: 400 }))
 
     await cloudinary.uploader.destroy(file.public_id)
 
-    const deletedFile = await contentModel.findByIdAndDelete({ fileId })
+    const deletedFile = await contentModel.findByIdAndDelete(fileId)
 
     return res.status(200).json({ message: "success", deletedFile });
 

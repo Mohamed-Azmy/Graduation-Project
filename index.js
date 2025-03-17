@@ -18,7 +18,7 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     
 
-    io.on("disconnect");
 });
 
+export { io };
 export default app;
