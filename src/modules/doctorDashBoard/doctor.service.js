@@ -32,13 +32,10 @@ export const addFile = asyncHandler(async (req, res, next) => {
             },
             async (error, result) => {
                 if (error) {
-                    console.error("Upload error:", error);
                     return res.status(500).json({ error: "Upload failed" });
                 }
 
-                fs.unlink(filePath, (err) => {
-                    if (err) console.error("Error deleting file:", err);
-                });
+                fs.unlink(filePath);
 
                 let { secure_url, public_id } = result;
 
