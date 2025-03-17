@@ -84,3 +84,24 @@ export const addFile = asyncHandler(async (req, res, next) => {
     } else
         return next(new Error("invalid file type",{cause:400}))
 })
+
+
+export const deleteFile = asyncHandler(async (req, res, next) => {
+
+    const { fileId } = req.paramsك
+
+    if(!req.user)
+        return next (new Error("user not authorized",{cause:400}))
+    
+    const file= await contentModel.findById({fileId})
+
+    if(!file)
+        return next(new Error("files not found or deleted", { cause: 400 }))
+
+    await cloudinary.uploader.destroy(file.public_id) 
+
+    const deletedFile= await contentModel.findByIdAndDelete({fileId})
+
+    return res.status(200).json({ message: "success",deletedFile });
+
+})

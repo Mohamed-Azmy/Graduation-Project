@@ -9,3 +9,12 @@ export const doctorDashBoardValidation = {
     file: joi.object().required(),
     headers: generalRules.headers.required().unknown(true)
 };
+
+
+export const deleteSchemaFile = {
+    body: joi.object({
+        fileId: joi.string().length(25).required()
+    }),
+    file: joi.object().required(),
+    headers: generalRules.headers.required().unknown(true)
+};
