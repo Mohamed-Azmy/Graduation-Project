@@ -7,5 +7,5 @@ export const doctorDashBoardValidation = {
         courseTitle: joi.string().required()
     }),
     file: joi.object().required(),
-    headers:generalRules.headers.required()
-}
+    headers: generalRules.headers.required().unknown(true)
+};
