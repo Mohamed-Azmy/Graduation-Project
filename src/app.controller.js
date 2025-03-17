@@ -21,9 +21,9 @@ const bootStrap=async(app,express)=>{
 
     
 
-    app.use("*",(req,res,next)=>{
-        return res.status(404).json({ msg: "Welcome to E-Learning" });
-    })
+    app.get("/", (req, res) => {
+        return res.status(200).json({ message: "Welcome to E-Lerning" });
+    });
 
     app.use(globalErrorHandling);
 }
