@@ -4,7 +4,7 @@ import { addFiles } from "./DBquery.js"
 import fs from "fs";
 import { fileTypes } from "../../middlewares/multer.js";
 import { fileType } from "../../DB/models/content.model.js";
-import { io } from "../../../index.js";
+import io from "../../../index.js";
 
 export const addFile = asyncHandler(async (req, res, next) => {
 
