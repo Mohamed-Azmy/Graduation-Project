@@ -8,19 +8,20 @@ import { academicEmail } from "../../service/generatEmails.js";
 
 
 
+export const newPassword = academicPassword();
+    
+export const newEmail = academicEmail();
+
 
 export const signUp = asyncHandler(async(req,res,next)=>{
     const {firstName ,lastName ,gmail } = req.body ;
 
     const user = await findByEmail({ gmail });
 
+
     if (user)
         return next(new Error("student already exist ", { cause: 404 }));
 
-
-    const newPassword = academicPassword();
-    
-    const newEmail = academicEmail();
 
     eventEmitter.emit("sendEmail",{email :gmail}) ;
    

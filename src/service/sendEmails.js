@@ -10,8 +10,8 @@ export const sendEmails = async( to , subject , html )=>{
     })
     const info  = await transporter.sendMail({
         from : process.env.USER_EMAIL ,
-        to : to ,
-        subject ,
-        html  
+        to : to.to ,
+        subject : subject.subject,
+        html  : html.html
     })
 }
