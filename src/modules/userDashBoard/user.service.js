@@ -40,7 +40,6 @@ export const signUp = asyncHandler(async(req,res,next)=>{
     }
 
     await addStudent({ data: newStudent });
-    // console.log(newPassword);
 
     return res.status(200).json({ message: "success" });
 })

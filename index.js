@@ -5,6 +5,10 @@ import bootStrap from "./src/app.controller.js"
 const app = express();
 
 const port=Number(process.env.PORT)
+// console.log(process.env.USER_EMAIL);
+// console.log(process.env.USER_PASSWORD);
+
+
 
 bootStrap(app,express)
 
