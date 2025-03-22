@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
-import { asyncHandler } from '../utils/globalErrorHandling/index.js';
 
-export const sendEmails = asyncHandler(async( to , subject , html )=>{
+export const sendEmails = async( to , subject , html )=>{
     const transporter  = nodemailer.createTransport({
         service: 'gmail' ,
         auth:{
@@ -15,8 +14,4 @@ export const sendEmails = asyncHandler(async( to , subject , html )=>{
         subject ,
         html  
     })
-    if(info.accepted.length){
-        return true;
-    }
-    return false;
-})
+}
