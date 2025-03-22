@@ -2,19 +2,21 @@ import mongoose from "mongoose";
 import { enumRole } from "../../DB/models/users.model.js";
 import { asyncHandler, hashPassword, comparing, signToken } from "../../utils/index.js";
 import { findByEmail, addStudent } from "./DBquery.js";
+import { eventEmitter } from "../../utils/emailEvents/index.js";
+import { academicPassword , academicEmail } from "../../service/index.js";
 
 
 
 
 export const signUp = asyncHandler(async(req,res,next)=>{
-    const {firstName ,lastName ,email ,password} = req.body ;
+    const {firstName ,lastName ,email } = req.body ;
 
     const user = await findByEmail({ email });
 
     if (user)
         return next(new Error("student already exist ", { cause: 404 }));
-
-    const passwordHash = await hashPassword({ key: password, SALT_ROUNDS: process.env.SALT_ROUNDS })
+    eventEmitter.emit("sendEmail",{email}) ;
+    const passwordHash = await hashPassword({ key: academicPassword , SALT_ROUNDS: process.env.SALT_ROUNDS })
 
     const id = new mongoose.Types.ObjectId();
 
@@ -22,7 +24,7 @@ export const signUp = asyncHandler(async(req,res,next)=>{
         _id:id,
         firstName:firstName,
         lastName:lastName,
-        email:email,
+        email: academicEmail(),
         password:passwordHash,
         role: enumRole.student
     }
