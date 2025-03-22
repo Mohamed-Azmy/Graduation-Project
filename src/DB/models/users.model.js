@@ -22,7 +22,7 @@ export const userSchema= new mongoose.Schema({
   },
   email:{
     type:String,
-    match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/, "invalid email"],
+    // match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/, "invalid email"],
     unique: true
   },
   password:{
