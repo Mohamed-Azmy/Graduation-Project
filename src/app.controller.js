@@ -1,4 +1,5 @@
 import connectionDB from "./DB/connectionDB.js" 
+import { adminDashBoard } from "./modules/adminDashBoard/admin.controller.js";
 import doctorDashBoard from "./modules/doctorDashBoard/doctor.controller.js"
 import userDashBoard from "./modules/userDashBoard/user.controller.js"
 import { globalErrorHandling } from "./utils/globalErrorHandling/index.js"
@@ -13,7 +14,7 @@ const bootStrap=async(app,express)=>{
 
     app.use("/doctor",doctorDashBoard)
     app.use("/users",userDashBoard)
-
+    app.use("/admin",adminDashBoard)
 
 
     connectionDB()

@@ -14,8 +14,8 @@ export const signUpSchema = {
             "string.min": "name is short",
             "string.max": "name is long"
         }).required(),
-        gmail : generalRules.email.required(),
-        // password : generalRules.password.required() ,
+        email : generalRules.email.required(),
+        password : generalRules.password.required(),
     }).required() 
 };
 

@@ -8,50 +8,33 @@ import { academicEmail } from "../../service/generatEmails.js";
 
 
 
-export const newPassword = academicPassword();
-    
-export const newEmail = academicEmail();
-
 
 export const signUp = asyncHandler(async(req,res,next)=>{
-    const {firstName ,lastName ,gmail } = req.body ;
+    const {firstName ,lastName ,email, password} = req.body ;
 
-    const user = await findByEmail({ gmail });
+    const user = await findByEmail({ email });
 
 
     if (user)
         return next(new Error("student already exist ", { cause: 404 }));
-
-
-    eventEmitter.emit("sendEmail",{email :gmail}) ;
-   
-    
-    
-    const passwordHash = await hashPassword({ key : newPassword , SALT_ROUNDS: process.env.SALT_ROUNDS })
-    
+    const passwordHash = await hashPassword({ key : password , SALT_ROUNDS: process.env.SALT_ROUNDS })
     const id = new mongoose.Types.ObjectId();
-
     const newStudent = {
         _id:id,
         firstName:firstName,
         lastName:lastName,
-        email: newEmail,
+        email: email,
         password:passwordHash,
         role: enumRole.student
     }
-
     await addStudent({ data: newStudent });
-
     return res.status(200).json({ message: "success" });
 })
 
 
 export const login = asyncHandler(async (req, res, next) => {
-
     const { email, password } = req.body;
-
     const user = await findByEmail({ email });
-
     if (!user)
         return next(new Error("user not found", { cause: 404 }));
 
