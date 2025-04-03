@@ -14,5 +14,7 @@ export const addDoctorSchema = ({
 export const updateDoctorSchema = ({
     body : joi.object({
         newPassword : generalRules.password.required(),
+        cPassword:joi.string().valid(joi.ref('newPassword')),
+        currentPassword:joi.string().required(),
     })
 })

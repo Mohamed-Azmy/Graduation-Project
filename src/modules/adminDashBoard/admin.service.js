@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { eventEmitter } from "../../utils/emailEvents/index.js";
-import { asyncHandler, hashPassword } from "../../utils/index.js";
+import { asyncHandler, comparing, hashPassword } from "../../utils/index.js";
 import { addDoctor, findByEmail , findAllDoctors, updateDoctor } from "./DBquery.js";
 import { enumRole } from "../../DB/models/users.model.js";
 import { academicPassword } from "../../service/generatPass.js";
@@ -48,7 +48,14 @@ export const addDoctorByAdmin = asyncHandler(async(req,res,next)=>{
 
 
     export const updateDoctorDetalis = asyncHandler(async(req,res,next)=>{
-        const {newPassword} = req.body ;
+        const {currentPassword,newPassword, cPassword} = req.body ;
+        const passwordCompare = await comparing({Key:currentPassword , hashed:req.user.password});
+        if(!passwordCompare){
+            return next(new Error("wrong password", { cause: 400 }));
+        }
+        if(newPassword !== cPassword){
+            return next(new Error("passwords are not same", { cause: 400 }));
+        }
         const passwordHash =  await hashPassword({key:newPassword , SALT_ROUNDS:process.env.SALT_ROUNDS})
         const doctor = await updateDoctor(
             {_id:req.user._id} ,
