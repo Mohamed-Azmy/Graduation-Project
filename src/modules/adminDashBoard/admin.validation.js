@@ -10,3 +10,9 @@ export const addDoctorSchema = ({
         gmail :generalRules.email.required(),  
     })
 })
+
+export const updateDoctorSchema = ({
+    body : joi.object({
+        newPassword : generalRules.password.required(),
+    })
+})

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { eventEmitter } from "../../utils/emailEvents/index.js";
 import { asyncHandler, hashPassword } from "../../utils/index.js";
-import { addDoctor, findByEmail } from "./DBquery.js";
+import { addDoctor, findByEmail , findAllDoctors, updateDoctor } from "./DBquery.js";
 import { enumRole } from "../../DB/models/users.model.js";
 import { academicPassword } from "../../service/generatPass.js";
 import { academicEmail } from "../../service/generatEmails.js";
@@ -37,4 +37,22 @@ export const addDoctorByAdmin = asyncHandler(async(req,res,next)=>{
     }
     await addDoctor({ data: newDoctor });
     return res.status(200).json({ message: "success" });
+    })
+
+
+
+    export const getAllDoctorsByAdmin = asyncHandler(async(req,res,next)=>{
+        const doctors  = await findAllDoctors({role:enumRole.doctor});
+        return res.status(200).json({ message: "success", doctors });
+    })
+
+
+    export const updateDoctorDetalis = asyncHandler(async(req,res,next)=>{
+        const {newPassword} = req.body ;
+        const passwordHash =  await hashPassword({key:newPassword , SALT_ROUNDS:process.env.SALT_ROUNDS})
+        const doctor = await updateDoctor(
+            {_id:req.user._id} ,
+            {password:passwordHash}
+            ,{new:true});
+        return res.status(200).json({ message: "success" });
     })
