@@ -1,12 +1,10 @@
 import mongoose, { get } from "mongoose";
 import { eventEmitter } from "../../utils/emailEvents/index.js";
 import { asyncHandler, comparing, hashPassword } from "../../utils/index.js";
-import { addDoctor, findByEmail , findAllDoctors, updateDoctor , deleteDoctor} from "./DBquery.js";
 import { enumRole } from "../../DB/models/users.model.js";
 import { academicPassword } from "../../service/generatPass.js";
 import { academicEmail } from "../../service/generatEmails.js";
-import { addCourse , findByCourse, getAllCoursesFromDB , deleteCourse} from "./DBquery.js";
-
+import { findByEmail,addDoctor , findAllDoctors, updateDoctor,deleteDoctor,findById,addCourse,getAllCoursesFromDB,deleteCourse} from "./DBquery.js" 
 
 
 
@@ -75,7 +73,6 @@ export const addDoctorByAdmin = asyncHandler(async(req,res,next)=>{
             return next(new Error("doctor not found", { cause: 400 }));
         }
         
-        await doctor.deleteOne({_id:req.user._id});
         return res.status(200).json({ message: "success" });
     })
 
@@ -87,12 +84,7 @@ export const addCourseByAdmin = asyncHandler(async(req,res,next)=>{
         return next(new Error("course already exist", { cause: 400 }));
     }
     const newCourse = await addCourse({courseName,courseCode , doctorId});
-    return res.status(200).json({ message: "success",newCourse :{
-        id : newCourse._id,
-        courseName : newCourse.courseName,
-        courseCode : newCourse.courseCode, 
-        doctorIds : newCourse.doctorIds
-    } });
+    return res.status(200).json({ message: "success"});
 
 })
 
@@ -103,12 +95,12 @@ export const getAllCoursesByAdmin = asyncHandler(async(req,res,next)=>{
 })
 
 export const deleteCourseByAdmin = asyncHandler(async(req,res,next)=>{
-    const {courseCode} = req.body ;
-    const courseExist = await findByCourse({_id:courseCode});
+    const {courseId} = req.params ;
+    const courseExist = await findById({courseId});
     if(!courseExist){
         return next(new Error("course not found", { cause: 400 }));
     }
-    await deleteCourse({_id:courseCode});
+    await deleteCourse({_id});
     return res.status(200).json({ message: "success" });
 })
 

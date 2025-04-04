@@ -27,6 +27,13 @@ export const courseSchema = new mongoose.Schema({
     required: true,
     enum: Object.values(enumLevel)
   },
+  doctorId:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+    }
+  ]
+
+  
 });
 
 
