@@ -18,3 +18,23 @@ export const updateDoctorSchema = ({
         currentPassword:joi.string().required(),
     })
 })
+
+export const deleteDoctorSchema = ({
+    body : joi.object({
+        id : joi.string().required(),
+    })
+})
+
+export const addCourseSchema = ({
+    body : joi.object({
+        courseName : joi.string().required(),
+        courseCode : joi.string().required(),
+        doctorId : joi.array().required(),
+    })
+})
+
+export const deleteCourseSchema = ({
+    body : joi.object({
+        courseCode : joi.string().required(),
+    })
+})

@@ -1,4 +1,6 @@
-import mongoose from  "mongoose";
+import mongoose from  "mongoose"
+
+
 
 
 export const enumLevel={
@@ -7,7 +9,7 @@ export const enumLevel={
     level4:"level4"
 }
 
-export const subjectSchema = new mongoose.Schema({
+export const courseSchema = new mongoose.Schema({
   courseTitle: {
     type: String,
     required: true,
@@ -29,4 +31,4 @@ export const subjectSchema = new mongoose.Schema({
 
 
 
-export const subjectModel= mongoose.model.subject || mongoose.model('subject',subjectSchema);
+export const courseModel= mongoose.model.course || mongoose.model('course',courseSchema);
