@@ -10,8 +10,8 @@ export const adminDashBoard = Router() ;
 
 adminDashBoard.post("/addDoctors",validation(addDoctorSchema),addDoctorByAdmin)
 adminDashBoard.get("/getAllDoctors",getAllDoctorsByAdmin)
-adminDashBoard.patch("/updateDoctor",validation(updateDoctorSchema),authentication,updateDoctorDetalis)
-adminDashBoard.delete("/deleteDoctor",authentication,deleteDoctorByAdmin)
-adminDashBoard.post("/addCourse",authentication,addCourseByAdmin)
-adminDashBoard.get("/getAllCourses",authentication,getAllCoursesByAdmin)
-adminDashBoard.delete("/deleteCourse",authentication,deleteCourseByAdmin)
+adminDashBoard.patch("/updateDoctor",validation(updateDoctorSchema),updateDoctorDetalis)
+adminDashBoard.delete("/deleteDoctor/:doctorId",deleteDoctorByAdmin)
+adminDashBoard.post("/addCourse",addCourseByAdmin)
+adminDashBoard.get("/getAllCourses",getAllCoursesByAdmin)
+adminDashBoard.delete("/deleteCourse/:courseId",deleteCourseByAdmin)

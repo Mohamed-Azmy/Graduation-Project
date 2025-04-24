@@ -10,7 +10,7 @@ export const enumLevel={
 }
 
 export const courseSchema = new mongoose.Schema({
-  courseTitle: {
+  courseName: {
     type: String,
     required: true,
     trim: true
@@ -32,8 +32,6 @@ export const courseSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
     }
   ]
-
-  
 });
 
 

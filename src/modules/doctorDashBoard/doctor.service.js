@@ -5,6 +5,8 @@ import fs from "fs";
 import { fileTypes } from "../../middlewares/multer.js";
 import { fileType } from "../../DB/models/content.model.js";
 import {io} from "../../../index.js";
+import axios from "axios";
+import { contentModel } from "../../DB/models/content.model.js";
 
 export const addFile = asyncHandler(async (req, res, next) => {
 
@@ -35,7 +37,13 @@ export const addFile = asyncHandler(async (req, res, next) => {
                     return res.status(500).json({ error: "Upload failed" });
                 }
 
-                fs.unlink(filePath);
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.error("حدث خطأ أثناء حذف الملف:", err);
+                    } else {
+                        console.log("تم حذف الملف بنجاح");
+                    }
+                })
 
                 let { secure_url, public_id } = result;
 
@@ -101,5 +109,60 @@ export const deleteFile = asyncHandler(async (req, res, next) => {
     const deletedFile = await contentModel.findByIdAndDelete(fileId)
 
     return res.status(200).json({ message: "success", deletedFile });
+
+});
+
+
+export const getFile = asyncHandler(async (req, res, next) => {
+
+    const { fileId } = req.params
+    // if (!req.user)
+    //     return next(new Error("user not authorized", { cause: 400 }))
+    
+    const file = await contentModel.findById(fileId)
+
+
+    if (!file)
+        return next(new Error("files not found or deleted", { cause: 400 }))
+
+    const videoUrl = file.file.secure_url;
+    const range = req.headers.range;
+
+    if (!range) {
+        return res.status(400).send("Requires Range header");
+    }
+
+    // نحصل على حجم الفيديو من Cloudinary
+    const response = await axios.head(videoUrl);
+    const videoSize = response.headers["content-length"];
+
+    // تقسيم الفيديو إلى Chunks
+    const CHUNK_SIZE = 10 ** 6; // 1MB
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+    const contentLength = end - start + 1;
+
+    // تجهيز الـ Headers للاستجابة
+    const headers = {
+        "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": contentLength,
+        "Content-Type": "video/mp4",
+    };
+
+    res.writeHead(206, headers);
+
+    // طلب الجزء المطلوب فقط من Cloudinary
+    const videoStream = await axios({
+        url: videoUrl,
+        method: "GET",
+        responseType: "stream",
+        headers: {
+            Range: `bytes=${start}-${end}`,
+        },
+    });
+
+    // بث البيانات للعميل
+    videoStream.data.pipe(res);
 
 });

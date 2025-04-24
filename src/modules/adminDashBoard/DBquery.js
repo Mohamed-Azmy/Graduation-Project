@@ -1,4 +1,4 @@
-import { userModel } from "../../DB/models/users.model.js";
+import { userModel, enumRole } from "../../DB/models/users.model.js";
 import { courseModel } from "../../DB/models/course.model.js";
 
 
@@ -25,19 +25,21 @@ export const updateDoctor = async({_id},{password}) =>{
     return await userModel.findByIdAndUpdate({_id},{password})
 }
 export const deleteDoctor = async({_id})=>{
-    return await userModel.findByIdAndDelete({_id})
+    return await userModel.findByIdAndDelete({_id, role:enumRole.doctor})
 }
 
 export const findById = async ({courseId}) => {
-    return await courseModel.findById( courseId );
+    return await courseModel.findById(courseId);
 };
 
-export const addCourse = async ({courseName,courseCode , doctorId}) => {
-    const course = await new courseModel({courseName,courseCode , doctorId});
-
-
+export const addCourse = async ({courseName,courseCode , doctorId, level}) => {
+    const course = await new courseModel({courseName,courseCode , doctorId, level});
     return await course.save();
 }
+
+export const findByCourse = async ({courseCode}) => {
+    return await courseModel.findOne({ courseCode });
+};
 
 export const getAllCoursesFromDB = async () => {
     return await courseModel.find();
