@@ -64,7 +64,6 @@ export const addFile = asyncHandler(async (req, res, next) => {
         fileStream.on("data", (chunk) => {
             uploadedSize += chunk.length;
             const progress = ((uploadedSize / totalSize) * 100).toFixed(2);
-            console.log(`Upload progress: ${progress}%`);
             io.emit("progress", progress);
         });
     } else if (fileTypes.pdf.includes(req.file.mimetype)) {
