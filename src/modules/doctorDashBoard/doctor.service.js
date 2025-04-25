@@ -38,11 +38,7 @@ export const addFile = asyncHandler(async (req, res, next) => {
                 }
 
                 fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error("حدث خطأ أثناء حذف الملف:", err);
-                    } else {
-                        console.log("تم حذف الملف بنجاح");
-                    }
+                    if (err) return res.status(500).json({ error: "Failed to delete file" });
                 })
 
                 let { secure_url, public_id } = result;
@@ -68,6 +64,7 @@ export const addFile = asyncHandler(async (req, res, next) => {
         fileStream.on("data", (chunk) => {
             uploadedSize += chunk.length;
             const progress = ((uploadedSize / totalSize) * 100).toFixed(2);
+            console.log(`Upload progress: ${progress}%`);
             io.emit("progress", progress);
         });
     } else if (fileTypes.pdf.includes(req.file.mimetype)) {
