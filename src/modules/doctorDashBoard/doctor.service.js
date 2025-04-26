@@ -10,7 +10,7 @@ import { contentModel } from "../../DB/models/content.model.js";
 
 export const addFile = asyncHandler(async (req, res, next) => {
 
-    const { fileName, courseTitle } = req.body;
+    const { fileName, courseTitle, courseId, videoType } = req.body;
 
     if (!req.user) {
         return next(new Error("user not authorized", { cause: 400 }))
@@ -50,7 +50,9 @@ export const addFile = asyncHandler(async (req, res, next) => {
                             secure_url,
                             public_id
                         },
-                        fileType: fileType.video
+                        fileType: fileType.video,
+                        videoType,
+                        courseId
                     }
                 })
 
@@ -79,7 +81,9 @@ export const addFile = asyncHandler(async (req, res, next) => {
                     secure_url,
                     public_id
                 },
-                fileType: fileType.pdf
+                fileType: fileType.pdf,
+                videoType,
+                courseId
             }
         });
         return res.status(200).json({ message: "success" });

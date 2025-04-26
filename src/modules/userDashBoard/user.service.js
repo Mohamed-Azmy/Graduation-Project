@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { enumRole } from "../../DB/models/users.model.js";
 import { asyncHandler, hashPassword, comparing, signToken } from "../../utils/index.js";
-import { findByEmail, addStudent, findByObjects } from "./DBquery.js";
+import { findByEmail, addStudent, findByObjects, findByLectures, findCourseById } from "./DBquery.js";
+import { enumVideo } from "../../DB/models/content.model.js";
 
 
 
@@ -45,29 +46,32 @@ export const login = asyncHandler(async (req, res, next) => {
     return res.status(200).json({ message: "success", token });
 })
 
-let newObjects={
-    level:"",
-    semster:""
-}
+
 export const  getAllSubjects = asyncHandler(async(req,res,next)=>{
+    let newObjects={};
 
     if(req.query?.level){
-         objects.level=req.query.level
+         newObjects.level=req.query.level
     }
     if(req.query?.semster){
-        objects.semster=req.query.semster
+        newObjects.semster=req.query.semster
     }
-    const subjects = await findByObjects({...newObjects})
+    const subjects = await findByObjects(newObjects);
 
+    if(subjects.length === 0){
+        return res.status(404).json({ message: "no subjects found" });
+    }
     return res.status(200).json({ message: "success",subjects});
-
 })
+
 export const getAllLectures= asyncHandler(async(req,res,next)=>{
-    const { subjectId}= req.params
+    const { subjectId }= req.params
+    const findCourse = await findCourseById(subjectId);
+    if(!findCourse) return res.status(404).json({ message: "course not found" });
     if(!subjectId){
         return next(new Error("subjects are required",{cause:400}))
     }
-    const lectures= await findByLecture({lec:subjectId})
+    const lectures= await findByLectures({courseId: subjectId, videoType: enumVideo.lec})
 
     return res.status(200).json({ message: "success",lectures});
 })
@@ -81,18 +85,3 @@ export const getAllVideos = asyncHandler(async(req,res,next)=>{
 
     return res.status(200).json({ message: "success",videos});
 })
-
-
-export const getAllSections= asyncHandler(async(req,res,next)=>{
-    const { subjectId}= req.params
-    if(!subjectId){
-        return next(new Error("subjects are required",{cause:400}))
-    }
-    const sections= await findBySection({sec:subjectId})
-
-    return res.status(200).json({ message: "success",sections});
-})
-
-
-
-

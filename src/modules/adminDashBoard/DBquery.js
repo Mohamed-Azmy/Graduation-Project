@@ -9,6 +9,7 @@ import { courseModel } from "../../DB/models/course.model.js";
 export const findByEmail = async ({ email }) => {
     return await userModel.findOne({ email });
 };
+
 export const findDoctorById = async (id) => {
     return await userModel.findById(id);
 };

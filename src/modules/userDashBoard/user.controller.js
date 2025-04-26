@@ -11,20 +11,10 @@ const userDashBoard = Router();
 userDashBoard.post("/signup",validation(SV.signUpSchema),SU.signUp)
 userDashBoard.post("/login" , validation(SV.loginSchema), SU.login)
 userDashBoard.get("/getAllSubjects",authentication,SU.getAllSubjects)
-userDashBoard.get("/lec/:level/:subjectId",authentication,SU.getAllLectures)
-userDashBoard.get("/lec/:level/:subjectId/:videoId",authentication,SU.getAllVideos)
-
-
-
-
-
-
-
-
-
-
-
-
+userDashBoard.get("/getAllSections",authentication,SU.getAllSubjects)
+userDashBoard.get("/getAllSubjects/:subjectId",authentication,SU.getAllLectures)
+userDashBoard.get("/getAllSections/:subjectId",authentication,SU.getAllLectures)
+userDashBoard.get("/getAllSubjects/:subjectId/:videoId",authentication,SU.getAllVideos)
 
 
 
