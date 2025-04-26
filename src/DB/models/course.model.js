@@ -9,6 +9,17 @@ export const enumLevel={
     level4:"level4"
 }
 
+export const enumSemster={
+  semster1:"first",
+  semster2:"second"
+}
+
+
+export const enumVideo={
+  lec:"lec",
+  sec:"sec"
+}
+
 export const courseSchema = new mongoose.Schema({
   courseName: {
     type: String,
@@ -22,10 +33,21 @@ export const courseSchema = new mongoose.Schema({
     uppercase: true
     
   },
+  semster:{
+    type: String,
+    required: true,
+    enum: Object.values(enumSemster)
+
+  },
   level: {
     type: String,
     required: true,
     enum: Object.values(enumLevel)
+  },
+  videoType:{
+    type:String,
+    required:true,
+    enum:Object.values(enumVideo),
   },
   doctorId:[
     {

@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 import { enumRole } from "../../DB/models/users.model.js";
 import { asyncHandler, hashPassword, comparing, signToken } from "../../utils/index.js";
-import { findByEmail, addStudent } from "./DBquery.js";
-import { eventEmitter } from "../../utils/emailEvents/index.js";
-import { academicPassword } from "../../service/generatPass.js";
-import { academicEmail } from "../../service/generatEmails.js";
+import { findByEmail, addStudent, findByObjects } from "./DBquery.js";
 
 
 
@@ -47,5 +44,55 @@ export const login = asyncHandler(async (req, res, next) => {
 
     return res.status(200).json({ message: "success", token });
 })
+
+let newObjects={
+    level:"",
+    semster:""
+}
+export const  getAllSubjects = asyncHandler(async(req,res,next)=>{
+
+    if(req.query?.level){
+         objects.level=req.query.level
+    }
+    if(req.query?.semster){
+        objects.semster=req.query.semster
+    }
+    const subjects = await findByObjects({...newObjects})
+
+    return res.status(200).json({ message: "success",subjects});
+
+})
+export const getAllLectures= asyncHandler(async(req,res,next)=>{
+    const { subjectId}= req.params
+    if(!subjectId){
+        return next(new Error("subjects are required",{cause:400}))
+    }
+    const lectures= await findByLecture({lec:subjectId})
+
+    return res.status(200).json({ message: "success",lectures});
+})
+
+export const getAllVideos = asyncHandler(async(req,res,next)=>{
+    const {videoId}= req.params
+    if(!videoId){
+        return next (new Error("video is required"))
+    }
+    const videos= await findByVideos({_id:videoId})
+
+    return res.status(200).json({ message: "success",videos});
+})
+
+
+export const getAllSections= asyncHandler(async(req,res,next)=>{
+    const { subjectId}= req.params
+    if(!subjectId){
+        return next(new Error("subjects are required",{cause:400}))
+    }
+    const sections= await findBySection({sec:subjectId})
+
+    return res.status(200).json({ message: "success",sections});
+})
+
+
 
 
