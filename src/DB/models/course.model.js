@@ -1,8 +1,6 @@
 import mongoose from  "mongoose"
 
 
-
-
 export const enumLevel={
     level2:"level2",
     level3:"level3",
@@ -12,12 +10,6 @@ export const enumLevel={
 export const enumSemster={
   semster1:"first",
   semster2:"second"
-}
-
-
-export const enumVideo={
-  lec:"lec",
-  sec:"sec"
 }
 
 export const courseSchema = new mongoose.Schema({
@@ -44,16 +36,21 @@ export const courseSchema = new mongoose.Schema({
     required: true,
     enum: Object.values(enumLevel)
   },
-  videoType:{
-    type:String,
-    required:true,
-    enum:Object.values(enumVideo),
-  },
-  doctorId:[
-    {
-      type: mongoose.Schema.Types.ObjectId,
+  doctorId: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+        required: true
+      }
+    ],
+    validate: {
+      validator: function (v) {
+        return Array.isArray(v) && v.length > 0;
+      },
+      message: "doctorId must contain at least one doctor."
     }
-  ]
+  }
 });
 
 

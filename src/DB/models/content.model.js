@@ -5,6 +5,12 @@ export const fileType = {
     video: "video",
     pdf: "pdf"
 }
+
+export const enumVideo={
+    lec:"lec",
+    sec:"sec"
+}
+
 const contentSchema= new mongoose.Schema({
     file:{
         secure_url:String,
@@ -18,6 +24,16 @@ const contentSchema= new mongoose.Schema({
         type: String,
         enum: Object.values(fileType),
         required: true
+    },
+    courseId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "course",
+        required:true
+    },
+    videoType:{
+        type:String,
+        required:true,
+        enum:Object.values(enumVideo),
     }
 })
 

@@ -4,7 +4,7 @@ import { asyncHandler, comparing, hashPassword } from "../../utils/index.js";
 import { enumRole } from "../../DB/models/users.model.js";
 import { academicPassword } from "../../service/generatPass.js";
 import { academicEmail } from "../../service/generatEmails.js";
-import { findByEmail,addDoctor , findAllDoctors, updateDoctor,deleteDoctor,findById,addCourse,getAllCoursesFromDB,deleteCourse, findByCourse} from "./DBquery.js"
+import { findByEmail,addDoctor , findAllDoctors, updateDoctor,deleteDoctor,findById,addCourse,getAllCoursesFromDB,deleteCourse, findByCourse, findDoctorById} from "./DBquery.js"
 
 
 
@@ -79,13 +79,17 @@ export const addDoctorByAdmin = asyncHandler(async(req,res,next)=>{
 
 
 export const addCourseByAdmin = asyncHandler(async(req,res,next)=>{
-    const {courseName, courseCode , doctorId, level } = req.body ;
+    const {courseName, courseCode , doctorId, level, semster } = req.body;
+    const doctor = await findDoctorById(doctorId);
+    if(!doctor){
+        return res.status(400).json({ message: "doctor not found" });
+    }
     const courseExist = await findByCourse({courseCode});
     if(courseExist){
         return next(new Error("course already exist", { cause: 400 }));
     }
-    const newCourse = await addCourse({courseName,courseCode , doctorId, level});
-    return res.status(200).json({ message: "success"});
+    const newCourse = await addCourse({courseName,courseCode , doctorId, level, semster });
+    return res.status(200).json({ message: "success", newCourse });
 
 })
 

@@ -9,6 +9,9 @@ import { courseModel } from "../../DB/models/course.model.js";
 export const findByEmail = async ({ email }) => {
     return await userModel.findOne({ email });
 };
+export const findDoctorById = async (id) => {
+    return await userModel.findById(id);
+};
 
 export const addDoctor = async ({ data }) => {
     const user = await new userModel(data);
@@ -32,8 +35,8 @@ export const findById = async ({courseId}) => {
     return await courseModel.findById(courseId);
 };
 
-export const addCourse = async ({courseName,courseCode , doctorId, level}) => {
-    const course = await new courseModel({courseName,courseCode , doctorId, level});
+export const addCourse = async ({courseName,courseCode , doctorId, level, semster}) => {
+    const course = await new courseModel({courseName,courseCode , doctorId, level, semster});
     return await course.save();
 }
 
