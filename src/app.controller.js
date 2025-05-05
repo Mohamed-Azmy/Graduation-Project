@@ -19,7 +19,7 @@ const bootStrap=async(app,express)=>{
     app.use(express.urlencoded({ limit: "500mb", extended: true }));
     app.use(helmet());
     app.use(cors({
-        origin: 'https://graduation-project-lilac-five.vercel.app',
+        origin: 'https://localhost:5173',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization']
     }));
