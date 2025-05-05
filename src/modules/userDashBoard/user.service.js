@@ -43,7 +43,7 @@ export const login = asyncHandler(async (req, res, next) => {
 
     const token = await signToken({ payload: { email, id: user._id }, SIGNATURE: process.env.SIGNRTURE_TOKEN });
 
-    return res.status(200).json({ message: "success", token });
+    return res.status(200).json({ message: "success", token, role: user.role });
 })
 
 
