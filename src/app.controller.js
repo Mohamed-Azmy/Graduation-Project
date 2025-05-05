@@ -19,17 +19,14 @@ const bootStrap=async(app,express)=>{
     app.use(express.urlencoded({ limit: "500mb", extended: true }));
     app.use(helmet());
     app.use(cors('*'));
-    app.use(limiter())
+    app.use(limiter);
 
     app.use("/doctor",doctorDashBoard)
     app.use("/users",userDashBoard)
     app.use("/admin",adminDashBoard)
 
 
-    connectionDB()
-
-
-    
+    connectionDB();
 
     app.get("/", (req, res) => {
         return res.status(200).json({ message: "Welcome to E-Lerning" });
