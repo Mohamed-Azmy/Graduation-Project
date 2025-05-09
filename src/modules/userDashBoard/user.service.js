@@ -76,6 +76,18 @@ export const getAllLectures= asyncHandler(async(req,res,next)=>{
     return res.status(200).json({ message: "success",lectures});
 })
 
+export const sections = asyncHandler(async(req,res,next)=>{
+    const { subjectId }= req.params
+    const findCourse = await findCourseById(subjectId);
+    if(!findCourse) return res.status(404).json({ message: "course not found" });
+    if(!subjectId){
+        return next(new Error("subjects are required",{cause:400}))
+    }
+    const lectures= await findByLectures({courseId: subjectId, videoType: enumVideo.sec})
+
+    return res.status(200).json({ message: "success",lectures});
+})
+
 export const getAllVideos = asyncHandler(async(req,res,next)=>{
     const {videoId}= req.params
     if(!videoId){

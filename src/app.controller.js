@@ -33,6 +33,9 @@ const bootStrap=async(app,express)=>{
     });
 
     app.use(globalErrorHandling);
+    app.use("*",(req,res,next)=>{
+        res.status(404).json({msg:"page not found"})
+    })
 }
 
 
