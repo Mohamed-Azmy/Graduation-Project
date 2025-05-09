@@ -88,12 +88,4 @@ export const sections = asyncHandler(async(req,res,next)=>{
     return res.status(200).json({ message: "success",lectures});
 })
 
-export const getAllVideos = asyncHandler(async(req,res,next)=>{
-    const {videoId}= req.params
-    if(!videoId){
-        return next (new Error("video is required"))
-    }
-    const videos= await findByVideos({_id:videoId})
 
-    return res.status(200).json({ message: "success",videos});
-})
