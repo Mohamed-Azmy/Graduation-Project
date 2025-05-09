@@ -11,6 +11,10 @@ export const findCourseById = async (id) => {
     return await courseModel.findById(id);
 };
 
+export const findContent = async () => {
+    return await courseModel.find().sort({createdAt:-1}).limit(6);
+};
+
 
 export const addStudent = async ({ data }) => {
     const user = await new userModel(data);

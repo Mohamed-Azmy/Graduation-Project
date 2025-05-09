@@ -34,8 +34,9 @@ const contentSchema= new mongoose.Schema({
         type:String,
         required:true,
         enum:Object.values(enumVideo),
-    }
-})
+    },
+    
+},{timestamps:true})
 
 
 export const contentModel= mongoose.model.content || mongoose.model('content', contentSchema)

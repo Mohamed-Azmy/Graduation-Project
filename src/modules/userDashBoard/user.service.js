@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { enumRole } from "../../DB/models/users.model.js";
 import { asyncHandler, hashPassword, comparing, signToken } from "../../utils/index.js";
-import { findByEmail, addStudent, findByObjects, findByLectures, findCourseById } from "./DBquery.js";
+import { findByEmail, addStudent, findByObjects, findByLectures, findCourseById, findContent } from "./DBquery.js";
 import { enumVideo } from "../../DB/models/content.model.js";
 
 
@@ -88,4 +88,12 @@ export const sections = asyncHandler(async(req,res,next)=>{
     return res.status(200).json({ message: "success",lectures});
 })
 
+export const newListUpload= asyncHandler(async(req,res,next)=>{
+    
+    const videos = await findContent()
+    if(!videos){
+        return next(new Error("data isn't found",{cause:400}))
+    }
+    return res.status(200).json({ message: "success",videos});
 
+})
