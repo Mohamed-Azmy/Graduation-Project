@@ -10,7 +10,7 @@ const doctorDashBoard= Router()
 
 
 
-doctorDashBoard.post("/", authentication,multerCloudinary([...fileTypes.pdf, ...fileTypes.video]).single("attachment"),  addFile);
+doctorDashBoard.post("/", authentication,multerCloudinary([...fileTypes.pdf]).single("attachment"), addFile);
 doctorDashBoard.delete("/:fileId", authentication, authorization([enumRole.doctor]), validation(deleteSchemaFile), deleteFile);
 doctorDashBoard.get("/:fileId", getFile);
 

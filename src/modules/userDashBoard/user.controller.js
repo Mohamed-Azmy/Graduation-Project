@@ -15,7 +15,7 @@ userDashBoard.get("/getAllSubjects",authentication,SU.getAllSubjects)
 userDashBoard.get("/getAllSections",authentication,SU.getAllSubjects)
 userDashBoard.get("/getAllSubjects/:subjectId",authentication,SU.getAllLectures)
 userDashBoard.get("/getAllSections/:subjectId",authentication,SU.sections)
-userDashBoard.get("/getAllSubjects/:subjectId/:fileId",authentication,getFile)
+userDashBoard.get("/stream/:fileId",getFile)
 userDashBoard.get("/newListUpload",authentication,SU.newListUpload)
 
 
