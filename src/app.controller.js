@@ -19,15 +19,9 @@ const bootStrap=async(app,express)=>{
     app.use(express.urlencoded({ limit: "500mb", extended: true }));
     app.use(helmet());
 
-    const corsOptions = {
-        origin: 'http://localhost:3000', // السماح بالوصول من هذا المصدر
-        methods: ['GET', 'POST'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Range'],
-    };
+    app.use(cors('*'));
 
-    app.use(cors(corsOptions));
-
-    // app.use(limiter);
+    app.use(limiter);
 
     app.use("/doctor",doctorDashBoard)
     app.use("/users",userDashBoard)

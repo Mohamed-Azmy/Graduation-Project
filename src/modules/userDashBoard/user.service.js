@@ -89,7 +89,6 @@ export const sections = asyncHandler(async(req,res,next)=>{
 })
 
 export const newListUpload= asyncHandler(async(req,res,next)=>{
-    
     const videos = await findContent()
     if(!videos){
         return next(new Error("data isn't found",{cause:400}))
