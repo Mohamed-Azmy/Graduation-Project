@@ -73,7 +73,7 @@ export const getAllLectures= asyncHandler(async(req,res,next)=>{
     }
     const lectures= await findByLectures({courseId: subjectId, videoType: enumVideo.lec})
 
-    return res.status(200).json({ message: "success",lectures});
+    return res.status(200).json({ message: "success", lectures });
 })
 
 export const sections = asyncHandler(async(req,res,next)=>{
