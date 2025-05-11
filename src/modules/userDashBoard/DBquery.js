@@ -27,9 +27,9 @@ export const findByObjects =async(filterQuery= {})=>{
 }
 
 export const findByLectures =async({courseId, videoType })=>{
-    return await contentModel.find({courseId, videoType})
+    return await contentModel.find({courseId, videoType}).select("_id courseTitle fileName numOfLec");
 }
 
 export const findByVideos =async({videoId})=>{
-    return await contentModel.find({_id:videoId}).select("_id courseTitle fileName numOfLec ");
+    return await contentModel.find({_id:videoId})
 }
