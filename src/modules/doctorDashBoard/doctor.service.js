@@ -23,6 +23,7 @@ export const addFile = asyncHandler(async (req, res, next) => {
 
     const videoId = extractYouTubeVideoId(videoUrl);
     const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "raw",
         folder: `E-Learning/Pdfs/${courseTitle}`,
         public_id: fileName,
         unique_filename: false
