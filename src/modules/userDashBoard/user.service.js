@@ -85,7 +85,7 @@ export const sections = asyncHandler(async(req,res,next)=>{
     }
     const lectures= await findByLectures({courseId: subjectId, videoType: enumVideo.sec})
 
-    return res.status(200).json({ message: "success",lectures});
+    return res.status(200).json({ message: "success",lectures, courseTitle: findCourse.courseName});
 })
 
 export const newListUpload= asyncHandler(async(req,res,next)=>{
