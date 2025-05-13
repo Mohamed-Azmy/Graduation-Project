@@ -12,7 +12,7 @@ export const findCourseById = async (id) => {
 };
 
 export const findContent = async () => {
-    return await courseModel.find().sort({createdAt:-1}).limit(6);
+    return await contentModel.find().sort({createdAt:-1}).limit(6);
 };
 
 

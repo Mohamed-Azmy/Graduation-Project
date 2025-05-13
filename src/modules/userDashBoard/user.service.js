@@ -89,6 +89,8 @@ export const sections = asyncHandler(async(req,res,next)=>{
 })
 
 export const newListUpload= asyncHandler(async(req,res,next)=>{
+    if(!req.user)
+        return next(new Error("user not authorized",{cause:400}));
     const videos = await findContent()
     if(!videos){
         return next(new Error("data isn't found",{cause:400}))

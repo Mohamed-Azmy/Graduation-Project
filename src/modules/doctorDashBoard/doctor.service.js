@@ -71,6 +71,8 @@ export const deleteFile = asyncHandler(async (req, res, next) => {
 
 
 export const getFile = asyncHandler(async (req, res, next) => {
+    if (!req.user)
+        return next(new Error("user not authorized", { cause: 400 }))
     const { fileId } = req.params;
 
     const findFile = await contentModel.findById(fileId);
