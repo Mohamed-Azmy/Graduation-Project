@@ -48,6 +48,8 @@ export const login = asyncHandler(async (req, res, next) => {
 
 
 export const  getAllSubjects = asyncHandler(async(req,res,next)=>{
+    if(!req.user) return next(new Error("user not authorized",{cause:400}));
+
     let newObjects={};
 
     if(req.query?.level){
@@ -65,6 +67,7 @@ export const  getAllSubjects = asyncHandler(async(req,res,next)=>{
 })
 
 export const getAllLectures= asyncHandler(async(req,res,next)=>{
+    if(!req.user) return next(new Error("user not authorized",{cause:400}));
     const { subjectId }= req.params;
     const findCourse = await findCourseById(subjectId);
     if(!findCourse) return res.status(404).json({ message: "course not found" });
@@ -77,6 +80,7 @@ export const getAllLectures= asyncHandler(async(req,res,next)=>{
 })
 
 export const sections = asyncHandler(async(req,res,next)=>{
+    if(!req.user) return next(new Error("user not authorized",{cause:400}));
     const { subjectId }= req.params
     const findCourse = await findCourseById(subjectId);
     if(!findCourse) return res.status(404).json({ message: "course not found" });
