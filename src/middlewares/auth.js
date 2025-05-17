@@ -16,7 +16,7 @@ export const authentication = asyncHandler(async (req, res, next) => {
 
     const decoded = await verifyToken({ token: authorization, SIGNATURE: process.env.SIGNRTURE_TOKEN });
     if (!decoded?.id) {
-        return next(new Error("invalid token", { cause: 400 }))
+        return next(new Error("problem happened while verifying token", { cause: 400 }));
     }
     const user = await userModel.findById(decoded.id)
 
