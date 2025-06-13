@@ -80,3 +80,40 @@ export const getFile = asyncHandler(async (req, res, next) => {
 
    return res.status(200).json({message:"success",file:findFile, videoStream: `https://www.youtube.com/embed/${findFile.videoId}`});
 });
+
+
+export const getCoursesByDoctor = asyncHandler(async (req, res, next) => {
+
+   if (!req.user)
+        return next(new Error("user not authorized", { cause: 400 }))
+
+  const courses = await courseModel.find({ doctorId: req.user.id });
+
+  if (!courses) {
+    return next(new Error("No courses found for this doctor", { cause: 404 }));
+  }
+
+  return res.status(200).json({message: "success",courses});
+});
+  
+
+
+export const getSubjects = asyncHandler(async (req, res, next) => {
+    
+     if (!req.user)
+        return next(new Error("user not authorized", { cause: 400 }))
+
+    const {courseId}= req.params
+
+     const findCourses = await courseModel.findById(courseId);
+
+    if (!findCourses) return next(new Error("course not found", { cause: 400 }));
+
+  const subjects = await contentModel.find({courseId});
+
+  if (!subjects) {
+    return next(new Error("lectures and sections not found ", { cause: 404 }));
+  }
+
+  return res.status(200).json({message: "success",subjects});
+});

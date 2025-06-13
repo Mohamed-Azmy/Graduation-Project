@@ -1,4 +1,5 @@
 import { contentModel } from "../../DB/models/content.model.js";
+import { userModel } from "../../DB/models/users.model.js";
 
 
 export const addFiles = async ({ data }) => {
@@ -6,3 +7,4 @@ export const addFiles = async ({ data }) => {
     return await content.save();
 
 }
+
