@@ -12,8 +12,8 @@ export const doctorDashBoardValidation = {
 
 
 export const deleteSchemaFile = {
-    body: joi.object({
-        fileId: joi.string().length(25).required()
+    params: joi.object({
+        fileId: generalRules.objectId.required()
     }),
     headers: generalRules.headers.required().unknown(true)
 };
