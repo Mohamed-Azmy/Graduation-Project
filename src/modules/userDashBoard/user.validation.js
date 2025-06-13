@@ -23,6 +23,6 @@ export const signUpSchema = {
 export const loginSchema = {
     body :joi.object({
         email:generalRules.email.required(),
-        password:generalRules.password.required(),
+        password:joi.string().required(),
     }).required() 
 }
