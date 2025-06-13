@@ -105,6 +105,7 @@ export const getSubjects = asyncHandler(async (req, res, next) => {
     const {courseId}= req.params
 
      const findCourses = await courseModel.findOne({_id:courseId, doctorId: req.user.id});
+     console.log(findCourses);
 
     if (!findCourses) return next(new Error("course not found", { cause: 400 }));
 
@@ -114,5 +115,5 @@ export const getSubjects = asyncHandler(async (req, res, next) => {
     return next(new Error("lectures and sections not found ", { cause: 404 }));
   }
 
-  return res.status(200).json({message: "success",subjects});
+  return res.status(200).json({message: "success",subjects, courseTitle: findCourses.courseName});
 });
