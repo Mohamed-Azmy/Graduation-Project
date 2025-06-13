@@ -12,9 +12,9 @@ const doctorDashBoard= Router()
 
 doctorDashBoard.post("/", authentication,multerCloudinary([...fileTypes.pdf]).single("attachment"), addFile);
 doctorDashBoard.delete("/:fileId", authentication, authorization([enumRole.doctor]), validation(deleteSchemaFile), deleteFile);
+doctorDashBoard.get("/coursesByDoctor",authentication , getCoursesByDoctor);
+doctorDashBoard.get("/getContent/:courseId",authentication , getSubjects);
 doctorDashBoard.get("/:fileId", getFile);
-doctorDashBoard.get("/coursesByDoctor",authentication, getCoursesByDoctor);
-doctorDashBoard.get("/getContent/:courseId",authentication,getSubjects);
 
 
 

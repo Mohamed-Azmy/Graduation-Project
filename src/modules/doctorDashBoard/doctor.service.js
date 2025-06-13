@@ -83,7 +83,6 @@ export const getFile = asyncHandler(async (req, res, next) => {
 
 
 export const getCoursesByDoctor = asyncHandler(async (req, res, next) => {
-
    if (!req.user)
         return next(new Error("user not authorized", { cause: 400 }))
 
@@ -105,7 +104,7 @@ export const getSubjects = asyncHandler(async (req, res, next) => {
 
     const {courseId}= req.params
 
-     const findCourses = await courseModel.findById(courseId);
+     const findCourses = await courseModel.findOne({courseId, doctorId: req.user.id});
 
     if (!findCourses) return next(new Error("course not found", { cause: 400 }));
 
